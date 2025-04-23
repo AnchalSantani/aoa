@@ -1,0 +1,80 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+void sort(int arr[], int n) {
+    for (int i = 0; i < n-1; i++)
+        for (int j = 0; j < n-i-1; j++)
+            if (arr[j] > arr[j+1]) {
+                int temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+}
+
+void LOOK(int requests[], int n, int head, int direction) {
+    int totalSeek = 0;
+    int i;
+
+    sort(requests, n);
+
+    int index = 0;
+    for (i = 0; i < n; i++) {
+        if (requests[i] >= head) {
+            index = i;
+            break;
+        }
+    }
+
+    printf("\nLOOK Order:\n");
+
+    // Direction 1 = right (towards higher track numbers)
+    if (direction == 1) {
+        for (i = index; i < n; i++) {
+            printf("%d ", requests[i]);
+            totalSeek += abs(head - requests[i]);
+            head = requests[i];
+        }
+        for (i = index - 1; i >= 0; i--) {
+            printf("%d ", requests[i]);
+            totalSeek += abs(head - requests[i]);
+            head = requests[i];
+        }
+    }
+    // Direction 0 = left (towards lower track numbers)
+    else {
+        for (i = index - 1; i >= 0; i--) {
+            printf("%d ", requests[i]);
+            totalSeek += abs(head - requests[i]);
+            head = requests[i];
+        }
+        for (i = index; i < n; i++) {
+            printf("%d ", requests[i]);
+            totalSeek += abs(head - requests[i]);
+            head = requests[i];
+        }
+    }
+
+    printf("\nTotal Head Movement in LOOK: %d\n", totalSeek);
+}
+
+int main() {
+    int n, head, direction;
+
+    printf("Enter number of requests: ");
+    scanf("%d", &n);
+
+    int requests[n];
+    printf("Enter request queue: ");
+    for (int i = 0; i < n; i++)
+        scanf("%d", &requests[i]);
+
+    printf("Enter initial head position: ");
+    scanf("%d", &head);
+
+    printf("Enter direction (1 for right, 0 for left): ");
+    scanf("%d", &direction);
+
+    LOOK(requests, n, head, direction);
+
+    return 0;
+}
