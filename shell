@@ -1,0 +1,233 @@
+21 COMMANDS/SHELL codes
+1. Create Two Input Files and Perform Operations
+Create two files containing five names each:
+
+# Creating file1.txt
+echo -e "Alice\nBob\nCharlie\nDavid\nEve" > file1.txt
+
+# Creating file2.txt
+echo -e "Grace\nHeidi\nIvan\nJudy\nMallory" > file2.txt
+
+a. Concatenate two files:
+
+cat file1.txt file2.txt > combined.txt
+
+b. Arrange the names of the friends in ascending order:
+
+sort combined.txt > sorted_ascending.txt
+
+c. Arrange the names of the friends in descending order:
+
+sort -r combined.txt > sorted_descending.txt
+
+d. Remove the contents of the files:
+
+> file1.txt
+> file2.txt
+
+e. Shell Program for the Entire Task:
+
+#!/bin/bash
+# Creating file1.txt and file2.txt
+echo -e "Alice\nBob\nCharlie\nDavid\nEve" > file1.txt
+echo -e "Grace\nHeidi\nIvan\nJudy\nMallory" > file2.txt
+
+# Concatenate the two files
+cat file1.txt file2.txt > combined.txt
+
+# Sort in ascending order
+sort combined.txt > sorted_ascending.txt
+
+# Sort in descending order
+sort -r combined.txt > sorted_descending.txt
+
+# Clear the contents of the files
+> file1.txt
+> file2.txt
+
+echo "Operations completed successfully!"
+
+
+---
+
+2. Shell Program to Determine if a 3-Digit Number is Armstrong
+
+An Armstrong number for a 3-digit number is one where the sum of the cubes of its digits equals the number itself.
+
+#!/bin/bash
+read -p "Enter a 3-digit number: " num
+# Extract digits
+digit1=$((num / 100))
+digit2=$(( (num / 10) % 10 ))
+digit3=$((num % 10))
+
+# Armstrong check
+sum=$((digit1**3 + digit2**3 + digit3**3))
+
+if [ $sum -eq $num ]; then
+    echo "$num is an Armstrong number."
+else
+    echo "$num is not an Armstrong number."
+fi
+
+
+---
+
+3. Shell Program to Compute Fibonacci Series Using a While Loop
+
+#!/bin/bash
+echo "Enter the number of terms for the Fibonacci series:"
+read n
+a=0
+b=1
+echo "Fibonacci series:"
+count=0
+
+while [ $count -lt $n ]
+do
+    echo -n "$a "
+    fn=$((a + b))
+    a=$b
+    b=$fn
+    ((count++))
+done
+echo
+
+
+---
+
+4. Shell Program to Determine Eligibility to Vote
+
+#!/bin/bash
+read -p "Enter your age: " age
+
+if [ $age -ge 18 ]; then
+    echo "You are eligible to vote."
+else
+    echo "You are not eligible to vote."
+fi
+
+
+---
+
+5. Shell Program to Perform Various System Operations
+
+1. Display the top 10 processes in descending order:
+
+ps aux --sort=-%cpu | head -n 10
+
+2. Display the process with the highest memory usage:
+
+ps aux --sort=-%mem | head -n 1
+
+3. Display the current user logged in and login name:
+
+whoami
+
+4. Display the first 11 lines from a file:
+
+head -n 11 filename.txt
+
+Shell Program:
+
+#!/bin/bash
+# Display top 10 processes
+echo "Top 10 processes (by CPU usage):"
+ps aux --sort=-%cpu | head -n 10
+
+# Process with highest memory usage
+echo "Process with highest memory usage:"
+ps aux --sort=-%mem | head -n 1
+
+# Current user and login name
+echo "Current user logged in:"
+whoami
+
+# Display first 11 lines from a file
+read -p "Enter filename: " filename
+echo "First 11 lines of the file $filename:"
+head -n 11 $filename
+
+
+---
+
+6. Shell Program to Handle Employee Files
+
+Create two employee files with the required information:
+
+# Create employee1.txt
+echo -e "101 John 50000 Developer\n102 Alice 60000 Manager\n103 Bob 55000 Tester" > employee1.txt
+
+# Create employee2.txt
+echo -e "104 Charlie 45000 Developer\n105 David 70000 HR" > employee2.txt
+
+a) Join two files and display them:
+
+cat employee1.txt employee2.txt > merged_employee.txt
+cat merged_employee.txt
+
+b) Search for a pattern in the input files:
+
+grep "Developer" employee1.txt
+grep "Manager" employee2.txt
+
+c) Sort the input files:
+
+sort employee1.txt
+sort employee2.txt
+
+Shell Program:
+
+#!/bin/bash
+# Create two employee files
+echo -e "101 John 50000 Developer\n102 Alice 60000 Manager\n103 Bob 55000 Tester" > employee1.txt
+echo -e "104 Charlie 45000 Developer\n105 David 70000 HR" > employee2.txt
+
+# Concatenate and display files
+cat employee1.txt employee2.txt > merged_employee.txt
+echo "Merged Employee Data:"
+cat merged_employee.txt
+
+# Search for a pattern
+read -p "Enter a search term: " pattern
+echo "Search results in employee1.txt:"
+grep "$pattern" employee1.txt
+echo "Search results in employee2.txt:"
+grep "$pattern" employee2.txt
+
+# Sort the files
+echo "Sorted employee1.txt:"
+sort employee1.txt
+echo "Sorted employee2.txt:"
+sort employee2.txt
+
+
+---
+
+7. Shell Program to Handle Customer Files
+
+Create a customer file with information:
+
+# Create customer1.txt
+echo -e "1 Alice NewYork 2000\n2 Bob LosAngeles 3000\n3 Charlie Chicago 2500" > customer1.txt
+
+# Create customer2.txt
+echo -e "4 David Miami 4000\n5 Eve Boston 5000" > customer2.txt
+
+Search for a word in the file:
+
+grep "Alice" customer1.txt
+
+Shell Program:
+
+#!/bin/bash
+# Create customer files
+echo -e "1 Alice NewYork 2000\n2 Bob LosAngeles 3000\n3 Charlie Chicago 2500" > customer1.txt
+echo -e "4 David Miami 4000\n5 Eve Boston 5000" > customer2.txt
+
+# Search for a word in the file
+read -p "Enter a word to search: " word
+echo "Search results in customer1.txt:"
+grep "$word" customer1.txt
+echo "Search results in customer2.txt:"
+grep "$word" customer2.txt
