@@ -1,0 +1,67 @@
+#include <stdio.h>
+
+struct Partition {
+    int start;
+    int size;
+    int isOccupied;  // 0 for free, 1 for occupied
+    int processID;  // If occupied, stores the process ID
+};
+
+int main() {
+    int totalMemory, numProcesses, i, j;
+    struct Partition memory[10];  // Maximum 10 partitions
+    int processSizes[10];  // To store sizes of processes
+    int partitionCount = 0;
+
+    printf("Enter total memory size: ");
+    scanf("%d", &totalMemory);
+
+    printf("Enter number of processes: ");
+    scanf("%d", &numProcesses);
+
+    // Initialize partitions
+    for(i = 0; i < numProcesses; i++) {
+        memory[i].start = -1;  // No memory allocated yet
+        memory[i].size = 0;
+        memory[i].isOccupied = 0;
+        memory[i].processID = -1;
+    }
+
+    // Process allocation
+    for(i = 0; i < numProcesses; i++) {
+        printf("Enter size of process %d: ", i + 1);
+        scanf("%d", &processSizes[i]);
+
+        int allocated = 0;
+        for(j = 0; j < partitionCount; j++) {
+            if(memory[j].isOccupied == 0 && memory[j].size >= processSizes[i]) {
+                // Allocate process to this partition
+                memory[j].isOccupied = 1;
+                memory[j].processID = i + 1;  // Process ID is i + 1
+                memory[j].size = processSizes[i];
+                allocated = 1;
+                printf("Process %d allocated to partition %d\n", i + 1, j + 1);
+                break;
+            }
+        }
+
+        // If no existing partition, create a new one
+        if(!allocated) {
+            memory[partitionCount].start = totalMemory - processSizes[i];  // Assign start point
+            memory[partitionCount].size = processSizes[i];
+            memory[partitionCount].isOccupied = 1;
+            memory[partitionCount].processID = i + 1;
+            partitionCount++;
+            printf("Process %d allocated to a new partition %d\n", i + 1, partitionCount);
+            totalMemory -= processSizes[i];  // Reduce total memory after allocation
+        }
+    }
+
+    // Display final memory allocation
+    printf("\nFinal Memory Allocation:\n");
+    for(i = 0; i < partitionCount; i++) {
+        printf("Partition %d: Start = %d, Size = %d, Process ID = %d\n", i + 1, memory[i].start, memory[i].size, memory[i].processID);
+    }
+
+    return 0;
+}
