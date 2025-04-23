@@ -1,0 +1,64 @@
+#include <stdio.h>
+
+struct Partition {
+    int start;
+    int size;
+    int isOccupied;  // 0 for free, 1 for occupied
+    int processID;  // Stores the process ID if occupied
+};
+
+int main() {
+    int totalMemory, partitionSize, numProcesses, i, j;
+    struct Partition memory[10];  // Maximum 10 partitions
+    int processSizes[10];  // To store sizes of processes
+    int partitionCount = 0;
+
+    printf("Enter total memory size: ");
+    scanf("%d", &totalMemory);
+
+    printf("Enter partition size: ");
+    scanf("%d", &partitionSize);
+
+    printf("Enter number of processes: ");
+    scanf("%d", &numProcesses);
+
+    // Initialize partitions
+    for(i = 0; i < (totalMemory / partitionSize); i++) {
+        memory[i].start = i * partitionSize;  // Starting address of the partition
+        memory[i].size = partitionSize;  // Fixed size partition
+        memory[i].isOccupied = 0;  // Initially free
+        memory[i].processID = -1;  // No process assigned yet
+    }
+
+    // Process allocation
+    for(i = 0; i < numProcesses; i++) {
+        printf("Enter size of process %d: ", i + 1);
+        scanf("%d", &processSizes[i]);
+
+        int allocated = 0;
+        for(j = 0; j < (totalMemory / partitionSize); j++) {
+            // Find a free partition that can accommodate the process
+            if(memory[j].isOccupied == 0 && memory[j].size >= processSizes[i]) {
+                // Allocate process to this partition
+                memory[j].isOccupied = 1;
+                memory[j].processID = i + 1;  // Process ID is i + 1
+                allocated = 1;
+                printf("Process %d allocated to partition %d\n", i + 1, j + 1);
+                break;
+            }
+        }
+
+        if (!allocated) {
+            printf("Process %d cannot be allocated (Insufficient space)\n", i + 1);
+        }
+    }
+
+    // Display final memory allocation
+    printf("\nFinal Memory Allocation:\n");
+    for(i = 0; i < (totalMemory / partitionSize); i++) {
+        printf("Partition %d: Start = %d, Size = %d, Process ID = %d\n", 
+               i + 1, memory[i].start, memory[i].size, memory[i].processID);
+    }
+
+    return 0;
+}
