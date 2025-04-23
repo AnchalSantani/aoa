@@ -1,0 +1,82 @@
+#include <stdio.h> 
+#include <math.h> 
+#include <string.h> 
+#define MAX_PAGES 256  
+ 
+typedef struct { 
+    int f_no; 
+    int v; 
+} PageTableEntry; 
+ 
+int main() { 
+    int p_size_kb, pg_size, mem_size_mb; 
+    int frames, pages; 
+    int phy_bits, log_bits; 
+    int pg_bits, off_bits; 
+    PageTableEntry pt[MAX_PAGES]; 
+    char log_addr[14]; 
+ 
+    printf("Enter size of process (KB): "); 
+    scanf("%d", &p_size_kb); 
+    printf("Enter page size (bytes): "); 
+    scanf("%d", &pg_size); 
+    printf("Enter size of main memory (MB): "); 
+    scanf("%d", &mem_size_mb); 
+ 
+57 
+ 
+    int p_size = p_size_kb * 1024; 
+    int mem_size = mem_size_mb * 1024 * 1024; 
+    frames = mem_size / pg_size; 
+    pages = p_size / pg_size; 
+ 
+    phy_bits = (int)log2(mem_size); 
+    log_bits = (int)log2(p_size); 
+    off_bits = (int)log2(pg_size); 
+    pg_bits = log_bits - off_bits; 
+ 
+    printf("\nTotal Frames in Memory: 2^%d = %d frames\n", (int)log2(frames), frames); 
+    printf("Number of Entries in Page Table: %d\n", pages); 
+    printf("Physical Address Bits: %d bits\n", phy_bits); 
+    printf("Logical Address Bits: %d bits\n", log_bits); 
+    printf("Logical Address Distribution: %d bits (Page No) + %d bits (Offset)\n", pg_bits, off_bits); 
+ 
+    printf("\nEnter page table entries (Page No, Frame No, Valid Bit):\n"); 
+    for (int i = 0; i < pages; i++) { 
+        printf("Page %d: ", i); 
+        scanf("%d %d", &pt[i].f_no, &pt[i].v); 
+    } 
+ 
+    printf("\nEnter Logical Address (Binary, %d-bit): ", log_bits); 
+    scanf("%s", log_addr); 
+ 
+    int pg_no = 0, offset = 0; 
+     
+    for (int i = 0; i < pg_bits; i++) { 
+58 
+ 
+        pg_no = pg_no * 2 + (log_addr[i] - '0'); 
+    } 
+    for (int i = pg_bits; i < log_bits; i++) { 
+        offset = offset * 2 + (log_addr[i] - '0'); 
+    } 
+ 
+    printf("\nDecoded Logical Address:\n"); 
+    printf("Page Number: %d\n", pg_no); 
+    printf("Offset: %d\n", offset); 
+ 
+    if (pg_no >= pages) { 
+        printf("Error: Page number out of range!\n"); 
+        return 1; 
+    } 
+ 
+    if (pt[pg_no].v == 1) { 
+        int phy_addr = (pt[pg_no].f_no * pg_size) + offset; 
+        printf("Output - Page hit (Frame No: %d)\n", pt[pg_no].f_no); 
+        printf("Physical Address: %d\n", phy_addr); 
+    } else { 
+        printf("Output - Page fault! Page not present in memory.\n"); 
+    } 
+ 
+    return 0; 
+} 
